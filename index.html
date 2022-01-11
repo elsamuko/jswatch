@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Watch</title>
+    <meta charset="UTF-8">
+    <script src="moment.min.js"></script>
+    <script>
+
+        // https://stackoverflow.com/a/44337628
+        function AdjustingInterval(workFunc, interval) {
+            var that = this;
+            var expected, timeout;
+            this.interval = interval;
+
+            this.start = function () {
+                expected = Date.now() + this.interval;
+                timeout = setTimeout(step, this.interval);
+            }
+
+            function step() {
+                var drift = Date.now() - expected;
+                workFunc();
+                expected += that.interval;
+                timeout = setTimeout(step, Math.max(0, that.interval - drift));
+            }
+        }
+
+        function updateTime() {
+            var now = moment();
+            document.getElementById("time").innerHTML = now.format("HH:mm:ss");
+        }
+
+        var ai = new AdjustingInterval(updateTime, 1000);
+        ai.start();
+
+    </script>
+</head>
+
+<body>
+
+    <div id="time">00:00:00</div>
+
+
+    <script>
+        (function () {
+
+        })();
+    </script>
+</body>
+
+</html>
